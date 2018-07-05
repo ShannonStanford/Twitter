@@ -26,4 +26,9 @@ public class Tweet {
         tweet.user = User.fromJSON(jsonObject.getJSONObject("user"));
         return tweet;
     }
+
+    public String getBody() {
+        return body;
+    }
+
 }

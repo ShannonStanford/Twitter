@@ -37,7 +37,8 @@
         <activity
             android:name=".ComposeActivity"
             android:label="@string/title_activity_compose"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".TweetDetails"></activity>
     </application>
 
 </manifest>

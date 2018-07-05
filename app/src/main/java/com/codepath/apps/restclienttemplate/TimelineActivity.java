@@ -44,21 +44,16 @@ public class TimelineActivity extends AppCompatActivity {
                 // Your code to refresh the list here.
                 // Make sure you call swipeContainer.setRefreshing(false)
                 // once the network request has completed successfully.
+                populateTimeline();
                 fetchTimelineAsync(0);
+                swipeContainer.setRefreshing(false);
             }
         });
 
-        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                // Your code to refresh the list here.
-                // Make sure you call swipeContainer.setRefreshing(false)
-                // once the network request has completed successfully.
-                fetchTimelineAsync(0);
-            }
-        });
-
-
+        swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
 
         client = TwitterApp.getRestClient(getApplicationContext());
 
@@ -87,9 +82,9 @@ public class TimelineActivity extends AppCompatActivity {
         client.getHomeTimeline(new JsonHttpResponseHandler() {
             public void onSuccess(JSONArray json) {
                 // Remember to CLEAR OUT old items before appending in the new ones
-                TweetAdapter.clear();
+                tweetAdapter.clear();
                 // ...the data has come back, add new items to your adapter...
-                TweetAdapter.addAll(...);
+                tweetAdapter.addAll(tweets);
                 // Now we call setRefreshing(false) to signal refresh has finished
                 swipeContainer.setRefreshing(false);
             }
@@ -99,7 +94,7 @@ public class TimelineActivity extends AppCompatActivity {
             }
         });
     }
-}
+
 
 
 
@@ -156,7 +151,7 @@ public class TimelineActivity extends AppCompatActivity {
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                Log.d("TwitterCLient", response.toString());
+                Log.d("TwitterCLient worked", response.toString());
                 // iterate through the JSON array
                 // for each entry, deserialize the JSON object
                 for (int i = 0; i < response.length(); i++){

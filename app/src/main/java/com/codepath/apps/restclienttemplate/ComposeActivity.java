@@ -26,6 +26,7 @@ public class ComposeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_compose);
+        etCompose = (EditText) findViewById(R.id.etCompose);
 //        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 //        setSupportActionBar(toolbar);
 //
@@ -37,6 +38,16 @@ public class ComposeActivity extends AppCompatActivity {
 //                        .setAction("Action", null).show();
 //            }
 //        });
+
+
+        tweet = Parcels.unwrap(getIntent().getParcelableExtra(Tweet.class.getSimpleName()));
+
+        Log.i("screenName", tweet.user.screenName);
+        if(!tweet.user.screenName.equals("")){
+            Log.i("Compose Activity", "gets here");
+            etCompose.setText("@" + tweet.user.screenName);
+        }
+
         client = TwitterApp.getRestClient(getApplicationContext());
 
     }
