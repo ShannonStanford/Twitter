@@ -38,15 +38,18 @@ public class ComposeActivity extends AppCompatActivity {
 //                        .setAction("Action", null).show();
 //            }
 //        });
-
-
         tweet = Parcels.unwrap(getIntent().getParcelableExtra(Tweet.class.getSimpleName()));
 
-        Log.i("screenName", tweet.user.screenName);
-        if(!tweet.user.screenName.equals("")){
-            Log.i("Compose Activity", "gets here");
-            etCompose.setText("@" + tweet.user.screenName);
+        if(tweet != null) {
+
+            Log.i("screenName", tweet.user.screenName);
+            if(!tweet.user.screenName.equals("")){
+                Log.i("Compose Activity", "gets here");
+                etCompose.setText("@" + tweet.user.screenName);
+            }
+
         }
+
 
         client = TwitterApp.getRestClient(getApplicationContext());
 
@@ -55,7 +58,7 @@ public class ComposeActivity extends AppCompatActivity {
 
     public void onSubmit(View v) {
         // closes the activity and returns to first screen
-        etCompose = (EditText) findViewById(R.id.etCompose);
+        //etCompose = (EditText) findViewById(R.id.etCompose);
 
 
         client.sendTweet(etCompose.getText().toString(), new JsonHttpResponseHandler(){

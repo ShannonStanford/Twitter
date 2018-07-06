@@ -6,11 +6,11 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.codepath.apps.restclienttemplate.models.Tweet;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.parceler.Parcels;
 
@@ -44,6 +44,7 @@ public class TweetDetails extends AppCompatActivity {
         // unwrap the movie passed in via intent, using its simple name as a key
         tweet = (Tweet) Parcels.unwrap(getIntent().getParcelableExtra(Tweet.class.getSimpleName()));
 
+
         // set the tweet
         tvTweetText.setText(tweet.getBody());
 
@@ -55,14 +56,15 @@ public class TweetDetails extends AppCompatActivity {
                 client.favTweet(tweet.uid, new JsonHttpResponseHandler() {
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                        try {
-                            tweet = Tweet.fromJSON(response);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+                        Toast.makeText(getBaseContext(), "Liked!", Toast.LENGTH_LONG).show();
                     }
                     public void onFailure(Throwable e) {
                         Log.d("DEBUG", "Fetch timeline error: " + e.toString());
+                    }
+
+                    @Override
+                    public void onFinish(){
+
                     }
                 });
 
@@ -77,11 +79,7 @@ public class TweetDetails extends AppCompatActivity {
                 client.retweet(tweet.uid, new JsonHttpResponseHandler() {
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                        try {
-                            tweet = Tweet.fromJSON(response);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+                        Toast.makeText(getBaseContext(), "Retweeted!", Toast.LENGTH_LONG).show();
                     }
                     public void onFailure(Throwable e) {
                         Log.d("DEBUG", "Fetch timeline error: " + e.toString());

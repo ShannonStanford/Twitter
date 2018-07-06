@@ -8,6 +8,12 @@
     tools:context=".ComposeActivity"
     tools:showIn="@layout/activity_compose">
 
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:counterEnabled="true"
+        app:counterMaxLength="140">
+
     <EditText
         android:id="@+id/etCompose"
         android:layout_width="385dp"
@@ -18,6 +24,8 @@
         android:inputType="textMultiLine"
         tools:layout_editor_absoluteX="0dp"
         tools:layout_editor_absoluteY="0dp" />
+
+    </android.support.design.widget.TextInputLayout>
 
     <Button
         android:id="@+id/button"

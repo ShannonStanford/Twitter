@@ -6,43 +6,65 @@
     android:layout_height="match_parent"
     tools:context=".TweetDetails">
 
+    <ImageView
+        android:id="@+id/ivProfileImage"
+        android:layout_width="65dp"
+        android:layout_height="64dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="18dp"
+        app:srcCompat="@android:color/black" />
     <TextView
         android:id="@+id/tvTweetText"
-        android:layout_width="384dp"
+        android:layout_width="282dp"
         android:layout_height="168dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
+        android:layout_marginStart="102dp"
+        android:layout_marginTop="0dp"
         android:text="TextView"
         tools:layout_editor_absoluteX="0dp"
         tools:layout_editor_absoluteY="0dp" />
 
     <Button
         android:id="@+id/btReply"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="33dp"
+        android:layout_height="30dp"
         android:layout_below="@+id/tvTweetText"
+        android:layout_marginStart="55dp"
         android:layout_toEndOf="@+id/btRetweet"
-        android:text="Reply"
+        android:background="@drawable/ic_vector_messages_stroke"
         tools:layout_editor_absoluteX="0dp"
         tools:layout_editor_absoluteY="168dp" />
 
     <Button
         android:id="@+id/btRetweet"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="36dp"
+        android:layout_height="31dp"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/tvTweetText"
-        android:text="Retweet"
+        android:background="@drawable/ic_vector_retweet_stroke"
         tools:layout_editor_absoluteX="88dp"
         tools:layout_editor_absoluteY="168dp" />
 
     <Button
         android:id="@+id/btLike"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="37dp"
+        android:layout_height="31dp"
+        android:layout_alignParentEnd="true"
         android:layout_below="@+id/tvTweetText"
-        android:layout_toEndOf="@+id/btReply"
-        android:text="Like"
+        android:layout_marginEnd="162dp"
+        android:background="@drawable/ic_vector_heart_stroke"
         tools:layout_editor_absoluteX="176dp"
         tools:layout_editor_absoluteY="168dp" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="121dp"
+        android:text="TextView" />
 </RelativeLayout>
