@@ -14,21 +14,32 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.codepath.apps.restclienttemplate.models.Tweet;
+import com.loopj.android.http.JsonHttpResponseHandler;
 
+import org.json.JSONObject;
 import org.parceler.Parcels;
 
 import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import cz.msebera.android.httpclient.Header;
 
 public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder>{
 
     private List<Tweet> mTweets;
     Context context;
+    TwitterClient client;
+
+
 
     //pass in the Tweets array in the constructor
-    public TweetAdapter(List<Tweet> tweets){
-        mTweets = tweets;
-    }
+    public TweetAdapter(List<Tweet> tweets, TwitterClient client){
 
+        mTweets = tweets;
+        this.client = client;
+
+    }
 
     //for each row inflate the layout and cache references into ViewHolder
     @Override
@@ -42,7 +53,6 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder>{
         return viewHolder;
     }
 
-
     //bind the values based on the position of the element
 
     @Override
@@ -50,12 +60,20 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder>{
         //get the data according to position
         final Tweet tweet = mTweets.get(position);
 
-
         //populate the views according to this data
         holder.tvUsername.setText(tweet.user.name);
         holder.tvBody.setText(tweet.body);
+        holder.tvTime.setText(tweet.createdAt);
+        holder.tvScreenName.setText("@" + tweet.user.screenName);
+
 
         Glide.with(context).load(tweet.user.profileImageUrl).into(holder.ivProfileImage);
+
+        if(tweet.mediaUrl != null) {
+            Glide.with(context).load(tweet.user.profileImageUrl).into(holder.ivPicture);
+        } else {
+            holder.ivPicture.setVisibility(View.GONE);
+        }
 
         holder.btReply.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v)
@@ -71,6 +89,60 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder>{
             }
         });
 
+        holder.btLike.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View v) {
+                client.favTweet(tweet.uid, new JsonHttpResponseHandler() {
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                        if(tweet.favorited) {
+                            v.setSelected(false);
+                            tweet.favorited = false;
+                        } else {
+                            v.setSelected(true);
+                            tweet.favorited = true;
+                        }
+
+                        Log.d("DEBUG", "worked");
+                    }
+                    public void onFailure(Throwable e) {
+                        Log.d("DEBUG", "Fetch timeline error: " + e.toString());
+                    }
+
+                    @Override
+                    public void onFinish(){
+
+                    }
+                });
+            }
+        });
+
+        holder.btRetweet.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View v) {
+                client.retweet(tweet.uid, new JsonHttpResponseHandler() {
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                        v.setSelected(true);
+
+                        Log.d("DEBUG", "worked");
+                    }
+                    public void onFailure(Throwable e) {
+                        Log.d("DEBUG", "Fetch timeline error: " + e.toString());
+                    }
+
+
+                    @Override
+                    public void onFinish(){
+
+                    }
+                });
+            }
+        });
+
+
+
+
     }
 
     @Override
@@ -78,24 +150,35 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder>{
         return mTweets.size();
     }
 
-
     //create ViewHolder class
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
-        public ImageView ivProfileImage;
-        public TextView tvUsername;
-        public TextView tvBody;
-        public Button btReply;
+        @BindView(R.id.ivProfileImage) ImageView ivProfileImage;
+        @BindView(R.id.ivPicture) ImageView ivPicture;
+        @BindView(R.id.tvUserName) TextView tvUsername;
+        @BindView(R.id.tvBody) TextView tvBody;
+        @BindView(R.id.btReply) Button btReply;
+        @BindView(R.id.btRetweet) Button btRetweet;
+        @BindView(R.id.btLike) Button btLike;
+        @BindView(R.id.tvTime) TextView tvTime;
+        @BindView(R.id.tvScreenName) TextView tvScreenName;
+
+
 
         public ViewHolder(View itemView){
             super(itemView);
 
             //perform findViewByID lookups
-
-            ivProfileImage = (ImageView) itemView.findViewById(R.id.ivProfileImage);
-            tvUsername = (TextView) itemView.findViewById(R.id.tvUserName);
-            tvBody = (TextView) itemView.findViewById(R.id.tvBody);
-            btReply = (Button) itemView.findViewById(R.id.btReply);
+//            ivProfileImage = (ImageView) itemView.findViewById(R.id.ivProfileImage);
+////            ivPicture = (ImageView) itemView.findViewById(R.id.ivPicture);
+////            tvUsername = (TextView) itemView.findViewById(R.id.tvUserName);
+////            tvBody = (TextView) itemView.findViewById(R.id.tvBody);
+////            btReply = (Button) itemView.findViewById(R.id.btReply);
+////            btRetweet = (Button) itemView.findViewById(R.id.btRetweet);
+////            btLike = (Button) itemView.findViewById(R.id.btLike);
+////            tvTime = (TextView) itemView.findViewById(R.id.tvTime);
+////            tvScreenName = (TextView) itemView.findViewById(R.id.tvScreenName);
+            ButterKnife.bind(this,itemView);
             itemView.setOnClickListener(this);
 
         }

@@ -31,9 +31,9 @@ public class TimelineActivity extends AppCompatActivity {
     int request;
     private SwipeRefreshLayout swipeContainer;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timeline);
         swipeContainer = (SwipeRefreshLayout) findViewById(R.id.swipeContainer);
@@ -44,9 +44,8 @@ public class TimelineActivity extends AppCompatActivity {
                 // Your code to refresh the list here.
                 // Make sure you call swipeContainer.setRefreshing(false)
                 // once the network request has completed successfully.
-                populateTimeline();
+//                populateTimeline();
                 fetchTimelineAsync(0);
-                swipeContainer.setRefreshing(false);
             }
         });
 
@@ -64,7 +63,7 @@ public class TimelineActivity extends AppCompatActivity {
         tweets = new ArrayList<>();
 
         // construct the adapter from this datasource
-        tweetAdapter = new TweetAdapter(tweets);
+        tweetAdapter = new TweetAdapter(tweets, client);
 
         //RecyclerView setup (layout manager, use adapter)
         rvTweets.setLayoutManager(new LinearLayoutManager(this));
@@ -100,20 +99,22 @@ public class TimelineActivity extends AppCompatActivity {
                     }
 
                 }
-                tweetAdapter.addAll(tweets);
+                //tweetAdapter.addAll(tweets);
                 // Now we call setRefreshing(false) to signal refresh has finished
-                swipeContainer.setRefreshing(false);
-                tweetAdapter.clear();
-                tweetAdapter.addAll(tweets);
-                swipeContainer.setRefreshing(false);
+                //swipeContainer.setRefreshing(false);
+//                tweetAdapter.addAll(tweets);
+                //swipeContainer.setRefreshing(false);
             }
            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 Log.d("DEBUG", "Fetch timeline error: ");
             }
+
+            @Override
+            public void onFinish() {
+                swipeContainer.setRefreshing(false);
+            }
         });
     }
-
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -154,19 +155,20 @@ public class TimelineActivity extends AppCompatActivity {
         startActivityForResult(i, request); // brings up the second activity
     }
 
-
-
     //get back data from Twitter API
     private void populateTimeline(){
         //make network request to get back data from Twitter API
+        showProgressBar();
         client.getHomeTimeline(new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                hideProgressBar();
                 Log.d("TwitterCLient", response.toString());
             }
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                //hideProgressBar();
                 Log.d("TwitterCLient worked", response.toString());
                 // iterate through the JSON array
                 // for each entry, deserialize the JSON object
@@ -188,45 +190,52 @@ public class TimelineActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                //hideProgressBar();
                 Log.d("TwitterCLient", responseString);
                 throwable.printStackTrace();
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
+                //hideProgressBar();
                 Log.d("TwitterCLient", errorResponse.toString());
                 throwable.printStackTrace();
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                //hideProgressBar();
                 Log.d("TwitterCLient", errorResponse.toString());
                 throwable.printStackTrace();
             }
         });
     }
 
-//    // Instance of the progress action-view
-//    MenuItem miActionProgressItem;
-//
-//    @Override
-//    public boolean onPrepareOptionsMenu(Menu menu) {
-//        // Store instance of the menu item containing progress
-//        miActionProgressItem = menu.findItem(R.id.miActionProgress);
-//        // Extract the action-view from the menu item
+    // Instance of the progress action-view
+    MenuItem miActionProgressItem;
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        // Store instance of the menu item containing progress
+        miActionProgressItem = menu.findItem(R.id.miActionProgress);
+        // Extract the action-view from the menu item
 //        ProgressBar v =  (ProgressBar) MenuItemCompat.getActionView(miActionProgressItem);
-//        // Return to finish
-//        return super.onPrepareOptionsMenu(menu);
-//    }
-//
-//    public void showProgressBar() {
-//        // Show progress item
-//        miActionProgressItem.setVisible(true);
-//    }
-//
-//    public void hideProgressBar() {
-//        // Hide progress item
-//        miActionProgressItem.setVisible(false);
-//    }
+        // Return to finish
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    public void showProgressBar() {
+        // Show progress item
+        if( miActionProgressItem != null){
+            miActionProgressItem.setVisible(true);
+        }
+    }
+
+    public void hideProgressBar() {
+        // Hide progress item
+        if( miActionProgressItem != null) {
+            miActionProgressItem.setVisible(false);
+        }
+    }
 
 }

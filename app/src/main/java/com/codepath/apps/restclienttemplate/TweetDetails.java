@@ -1,34 +1,40 @@
 package com.codepath.apps.restclienttemplate;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.codepath.apps.restclienttemplate.models.Tweet;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONObject;
 import org.parceler.Parcels;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import cz.msebera.android.httpclient.Header;
 
 public class TweetDetails extends AppCompatActivity {
 
     private TwitterClient client;
     Tweet tweet;
+    Context context;
 
     // the view objects
-    TextView tvTweetText;
-    Button btReply;
-    Button btRetweet;
-    Button btLike;
-
-    //ImageView im;
-
+    @BindView(R.id.tvTweetText) TextView tvTweetText;
+    @BindView(R.id.tvName) TextView tvName;
+    @BindView(R.id.tvTime) TextView tvTime;
+    @BindView(R.id.btReply) Button btReply;
+    @BindView(R.id.btRetweet) Button btRetweet;
+    @BindView(R.id.btLike) Button btLike;
+    @BindView(R.id.ivProfileImage) ImageView ivProfileImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,25 +43,31 @@ public class TweetDetails extends AppCompatActivity {
         client = TwitterApp.getRestClient(getApplicationContext());
 
         // resolve the view objects
-        tvTweetText = (TextView) findViewById(R.id.tvTweetText);
-        btLike = (Button) findViewById(R.id.btLike);
-        btRetweet = (Button) findViewById(R.id.btRetweet);
+        ButterKnife.bind(this);
 
         // unwrap the movie passed in via intent, using its simple name as a key
         tweet = (Tweet) Parcels.unwrap(getIntent().getParcelableExtra(Tweet.class.getSimpleName()));
 
-
         // set the tweet
         tvTweetText.setText(tweet.getBody());
+        tvName.setText(tweet.user.name);
+        tvTime.setText(tweet.createdAt);
 
+        Glide.with(ivProfileImage.getContext()).load(tweet.user.profileImageUrl).into(ivProfileImage);
 
         btLike.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-
+            public void onClick(final View v) {
                 client.favTweet(tweet.uid, new JsonHttpResponseHandler() {
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                        if(tweet.favorited) {
+                            v.setSelected(false);
+                            tweet.favorited = false;
+                        } else {
+                            v.setSelected(true);
+                            tweet.favorited = true;
+                        }
                         Toast.makeText(getBaseContext(), "Liked!", Toast.LENGTH_LONG).show();
                     }
                     public void onFailure(Throwable e) {
@@ -67,15 +79,12 @@ public class TweetDetails extends AppCompatActivity {
 
                     }
                 });
-
             }
         });
-
 
         btRetweet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 client.retweet(tweet.uid, new JsonHttpResponseHandler() {
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
@@ -85,7 +94,6 @@ public class TweetDetails extends AppCompatActivity {
                         Log.d("DEBUG", "Fetch timeline error: " + e.toString());
                     }
                 });
-
             }
         });
     }

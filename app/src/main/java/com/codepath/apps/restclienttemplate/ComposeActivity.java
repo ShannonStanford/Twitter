@@ -41,25 +41,18 @@ public class ComposeActivity extends AppCompatActivity {
         tweet = Parcels.unwrap(getIntent().getParcelableExtra(Tweet.class.getSimpleName()));
 
         if(tweet != null) {
-
             Log.i("screenName", tweet.user.screenName);
             if(!tweet.user.screenName.equals("")){
                 Log.i("Compose Activity", "gets here");
                 etCompose.setText("@" + tweet.user.screenName);
             }
-
         }
-
-
         client = TwitterApp.getRestClient(getApplicationContext());
-
     }
-
 
     public void onSubmit(View v) {
         // closes the activity and returns to first screen
         //etCompose = (EditText) findViewById(R.id.etCompose);
-
 
         client.sendTweet(etCompose.getText().toString(), new JsonHttpResponseHandler(){
             @Override
@@ -73,7 +66,6 @@ public class ComposeActivity extends AppCompatActivity {
                     setResult(RESULT_OK, data);
                     Log.i("ComposeActivity", "success");
                     finish();
-
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -84,8 +76,5 @@ public class ComposeActivity extends AppCompatActivity {
                 super.onFailure(statusCode, headers, responseString, throwable);
             }
         });
-
-
     }
-
 }

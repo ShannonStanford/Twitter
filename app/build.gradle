@@ -42,6 +42,8 @@ dependencies {
     // Room for simple persistence with an ORM
     implementation "android.arch.persistence.room:runtime:1.0.0"
     implementation 'com.android.support.constraint:constraint-layout:1.1.2'
+    implementation 'com.jakewharton:butterknife:8.8.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
     implementation 'org.parceler:parceler-api:1.1.6'
     annotationProcessor 'org.parceler:parceler:1.1.6'
     implementation 'com.android.support:design:27.1.1'
