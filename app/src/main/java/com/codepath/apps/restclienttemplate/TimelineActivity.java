@@ -41,10 +41,6 @@ public class TimelineActivity extends AppCompatActivity {
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                // Your code to refresh the list here.
-                // Make sure you call swipeContainer.setRefreshing(false)
-                // once the network request has completed successfully.
-//                populateTimeline();
                 fetchTimelineAsync(0);
             }
         });
@@ -75,21 +71,12 @@ public class TimelineActivity extends AppCompatActivity {
     }
 
     public void fetchTimelineAsync(int page) {
-        // Send the network request to fetch the updated data
-        // `client` here is an instance of Android Async HTTP
-        // getHomeTimeline is an example endpoint.
+        // Send the network request to fetch the updated data `client` here is an instance of Android Async HTTP.
         client.getHomeTimeline(new JsonHttpResponseHandler() {
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                // Remember to CLEAR OUT old items before appending in the new ones
                 tweetAdapter.clear();
-                // ...the data has come back, add new items to your adapter...
-                //tweetAdapter.addAll(tweets);
 
                 for (int i = 0; i < response.length(); i++){
-                    // convert each object to a Tweet model
-                    // add that Tweet model to our data source
-                    // notify the adapter that we've added an item
-
                     try {
                         Tweet tweet = Tweet.fromJSON(response.getJSONObject(i));
                         tweets.add(tweet);
@@ -99,11 +86,6 @@ public class TimelineActivity extends AppCompatActivity {
                     }
 
                 }
-                //tweetAdapter.addAll(tweets);
-                // Now we call setRefreshing(false) to signal refresh has finished
-                //swipeContainer.setRefreshing(false);
-//                tweetAdapter.addAll(tweets);
-                //swipeContainer.setRefreshing(false);
             }
            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 Log.d("DEBUG", "Fetch timeline error: ");
@@ -131,9 +113,6 @@ public class TimelineActivity extends AppCompatActivity {
                 launchComposeView();
                 Log.i("TimelineActivity", "worked");
                 return true;
-//            case R.id.miProfile:
-//                showProfileView();
-//                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -168,14 +147,9 @@ public class TimelineActivity extends AppCompatActivity {
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                //hideProgressBar();
+                hideProgressBar();
                 Log.d("TwitterCLient worked", response.toString());
-                // iterate through the JSON array
-                // for each entry, deserialize the JSON object
                 for (int i = 0; i < response.length(); i++){
-                    // convert each object to a Tweet model
-                    // add that Tweet model to our data source
-                    // notify the adapter that we've added an item
 
                     try {
                         Tweet tweet = Tweet.fromJSON(response.getJSONObject(i));
@@ -190,37 +164,31 @@ public class TimelineActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                //hideProgressBar();
+                hideProgressBar();
                 Log.d("TwitterCLient", responseString);
                 throwable.printStackTrace();
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
-                //hideProgressBar();
+                hideProgressBar();
                 Log.d("TwitterCLient", errorResponse.toString());
                 throwable.printStackTrace();
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                //hideProgressBar();
+                hideProgressBar();
                 Log.d("TwitterCLient", errorResponse.toString());
                 throwable.printStackTrace();
             }
         });
     }
-
-    // Instance of the progress action-view
     MenuItem miActionProgressItem;
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        // Store instance of the menu item containing progress
         miActionProgressItem = menu.findItem(R.id.miActionProgress);
-        // Extract the action-view from the menu item
-//        ProgressBar v =  (ProgressBar) MenuItemCompat.getActionView(miActionProgressItem);
-        // Return to finish
         return super.onPrepareOptionsMenu(menu);
     }
 

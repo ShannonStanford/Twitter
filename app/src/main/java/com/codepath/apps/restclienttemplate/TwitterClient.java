@@ -41,8 +41,7 @@ public class TwitterClient extends OAuthBaseClient {
 				String.format(REST_CALLBACK_URL_TEMPLATE, context.getString(R.string.intent_host),
 						context.getString(R.string.intent_scheme), context.getPackageName(), FALLBACK_URL));
 	}
-	// CHANGE THIS
-	// DEFINE METHODS for different API endpoints here
+
 	public void getHomeTimeline(AsyncHttpResponseHandler handler) {
 		String apiUrl = getApiUrl("statuses/home_timeline.json");
 		// Can specify query string params directly or through RequestParams.
@@ -63,7 +62,6 @@ public class TwitterClient extends OAuthBaseClient {
 
 	public void sendTweet(String message, JsonHttpResponseHandler handler) {
 		String apiUrl = getApiUrl("statuses/update.json");
-		// Can specify query string params directly or through RequestParams.
 		RequestParams params = new RequestParams();
 		params.put("status", message);
 		client.post(apiUrl, params, handler);
@@ -71,24 +69,16 @@ public class TwitterClient extends OAuthBaseClient {
 
 	public void favTweet(long id, JsonHttpResponseHandler handler) {
 		String apiUrl = getApiUrl("favorites/create.json");
-		// Can specify query string params directly or through RequestParams.
 		RequestParams params = new RequestParams();
 		params.put("id", id);
 		client.post(apiUrl, params, handler);
-		//https://api.twitter.com/1.1/favorites/create.json?id=243138128959913986
 	}
 
 	public void retweet(long id, JsonHttpResponseHandler handler) {
 		String apiUrl = getApiUrl("statuses/retweet/" + id + ".json");
-		//statuses/retweet/:id.json
-		// Can specify query string params directly or through RequestParams.
 		RequestParams params = new RequestParams();
-		//params.put("id", id);
 		client.post(apiUrl, params, handler);
 	}
-
-//https://api.twitter.com/1.1/statuses/retweet/243149503589400576.json
-
 
 }
 

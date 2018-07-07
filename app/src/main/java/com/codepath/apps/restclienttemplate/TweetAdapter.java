@@ -31,14 +31,10 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder>{
     Context context;
     TwitterClient client;
 
-
-
     //pass in the Tweets array in the constructor
     public TweetAdapter(List<Tweet> tweets, TwitterClient client){
-
         mTweets = tweets;
         this.client = client;
-
     }
 
     //for each row inflate the layout and cache references into ViewHolder
@@ -46,18 +42,13 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder>{
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
-
         View tweetView = inflater.inflate(R.layout.item_tweet, parent, false);
-
         ViewHolder viewHolder = new ViewHolder(tweetView);
         return viewHolder;
     }
 
-    //bind the values based on the position of the element
-
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        //get the data according to position
         final Tweet tweet = mTweets.get(position);
 
         //populate the views according to this data
@@ -66,11 +57,10 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder>{
         holder.tvTime.setText(tweet.createdAt);
         holder.tvScreenName.setText("@" + tweet.user.screenName);
 
-
         Glide.with(context).load(tweet.user.profileImageUrl).into(holder.ivProfileImage);
 
         if(tweet.mediaUrl != null) {
-            Glide.with(context).load(tweet.user.profileImageUrl).into(holder.ivPicture);
+            Glide.with(context).load(tweet.mediaUrl).into(holder.ivPicture);
         } else {
             holder.ivPicture.setVisibility(View.GONE);
         }
@@ -102,7 +92,6 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder>{
                             v.setSelected(true);
                             tweet.favorited = true;
                         }
-
                         Log.d("DEBUG", "worked");
                     }
                     public void onFailure(Throwable e) {
@@ -124,13 +113,11 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder>{
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                         v.setSelected(true);
-
                         Log.d("DEBUG", "worked");
                     }
                     public void onFailure(Throwable e) {
                         Log.d("DEBUG", "Fetch timeline error: " + e.toString());
                     }
-
 
                     @Override
                     public void onFinish(){
@@ -140,17 +127,12 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder>{
             }
         });
 
-
-
-
     }
 
     @Override
     public int getItemCount() {
         return mTweets.size();
     }
-
-    //create ViewHolder class
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         @BindView(R.id.ivProfileImage) ImageView ivProfileImage;
@@ -163,24 +145,10 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder>{
         @BindView(R.id.tvTime) TextView tvTime;
         @BindView(R.id.tvScreenName) TextView tvScreenName;
 
-
-
         public ViewHolder(View itemView){
             super(itemView);
-
-            //perform findViewByID lookups
-//            ivProfileImage = (ImageView) itemView.findViewById(R.id.ivProfileImage);
-////            ivPicture = (ImageView) itemView.findViewById(R.id.ivPicture);
-////            tvUsername = (TextView) itemView.findViewById(R.id.tvUserName);
-////            tvBody = (TextView) itemView.findViewById(R.id.tvBody);
-////            btReply = (Button) itemView.findViewById(R.id.btReply);
-////            btRetweet = (Button) itemView.findViewById(R.id.btRetweet);
-////            btLike = (Button) itemView.findViewById(R.id.btLike);
-////            tvTime = (TextView) itemView.findViewById(R.id.tvTime);
-////            tvScreenName = (TextView) itemView.findViewById(R.id.tvScreenName);
             ButterKnife.bind(this,itemView);
             itemView.setOnClickListener(this);
-
         }
 
         @Override

@@ -27,17 +27,6 @@ public class ComposeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_compose);
         etCompose = (EditText) findViewById(R.id.etCompose);
-//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-//        setSupportActionBar(toolbar);
-//
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
         tweet = Parcels.unwrap(getIntent().getParcelableExtra(Tweet.class.getSimpleName()));
 
         if(tweet != null) {
@@ -51,8 +40,6 @@ public class ComposeActivity extends AppCompatActivity {
     }
 
     public void onSubmit(View v) {
-        // closes the activity and returns to first screen
-        //etCompose = (EditText) findViewById(R.id.etCompose);
 
         client.sendTweet(etCompose.getText().toString(), new JsonHttpResponseHandler(){
             @Override

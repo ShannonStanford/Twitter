@@ -2,6 +2,7 @@ package com.codepath.apps.restclienttemplate;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -35,6 +36,8 @@ public class TweetDetails extends AppCompatActivity {
     @BindView(R.id.btRetweet) Button btRetweet;
     @BindView(R.id.btLike) Button btLike;
     @BindView(R.id.ivProfileImage) ImageView ivProfileImage;
+    @Nullable
+    @BindView(R.id.ivPicture) ImageView ivPicture;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +46,7 @@ public class TweetDetails extends AppCompatActivity {
         client = TwitterApp.getRestClient(getApplicationContext());
 
         // resolve the view objects
-        ButterKnife.bind(this);
+        ButterKnife.bind(this );
 
         // unwrap the movie passed in via intent, using its simple name as a key
         tweet = (Tweet) Parcels.unwrap(getIntent().getParcelableExtra(Tweet.class.getSimpleName()));
@@ -97,33 +100,5 @@ public class TweetDetails extends AppCompatActivity {
             }
         });
     }
-
-
-//   client.sendTweet(etCompose.getText().toString(), new JsonHttpResponseHandler(){
-//        @Override
-//        public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-//            try {
-//                Log.i("ComposeActivity", "success1");
-//                tweet = Tweet.fromJSON(response);
-//                Intent data = new Intent(getBaseContext(), TimelineActivity.class);
-//                data.putExtra("tweet", Parcels.wrap(tweet));
-//                data.putExtra("code", 3);
-//                setResult(RESULT_OK, data);
-//                Log.i("ComposeActivity", "success");
-//                finish();
-//
-//            } catch (JSONException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//
-//        @Override
-//        public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-//            super.onFailure(statusCode, headers, responseString, throwable);
-//        }
-//    });
-
-
-
 
 }

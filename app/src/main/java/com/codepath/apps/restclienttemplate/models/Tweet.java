@@ -21,9 +21,6 @@ public class Tweet {
     public String mediaUrl;
     public boolean favorited;
 
-
-
-    // getRelativeTimeAgo("Mon Apr 01 21:16:23 +0000 2014");
     public static String getRelativeTimeAgo(String rawJsonDate) {
         String twitterFormat = "EEE MMM dd HH:mm:ss ZZZZZ yyyy";
         SimpleDateFormat sf = new SimpleDateFormat(twitterFormat, Locale.ENGLISH);
@@ -32,16 +29,12 @@ public class Tweet {
         String relativeDate = "";
         try {
             long dateMillis = sf.parse(rawJsonDate).getTime();
-//            relativeDate = DateUtils.getRelativeTimeSpanString(dateMillis, System.currentTimeMillis(), DateUtils.SECOND_IN_MILLIS).toString();
             relativeDate = DateUtils.getRelativeTimeSpanString(dateMillis, System.currentTimeMillis(), DateUtils.SECOND_IN_MILLIS).toString();
         } catch (ParseException e) {
             e.printStackTrace();
         }
-
         return relativeDate;
     }
-
-    //deserialize the JSON
 
     //convert JSON object to tweet object
     public static Tweet fromJSON(JSONObject jsonObject) throws JSONException{
@@ -58,15 +51,12 @@ public class Tweet {
         } else {
             tweet.favorited = false;
         }
-        //JSONArray object = jsonObject.getJSONObject("entities").getJSONArray("media");
+
         try{
             tweet.mediaUrl = jsonObject.getJSONObject("entities").getJSONArray("media").getJSONObject(0).getString("media_url");
         } catch(Exception e ) {
             e.printStackTrace();
         }
-
-
-        //tweet.mediaUrl = object.atPo
         return tweet;
     }
 
